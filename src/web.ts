@@ -1,10 +1,17 @@
-import { WebPlugin } from '@capacitor/core';
+import {WebPlugin} from '@capacitor/core';
 
-import type { GpayPlugin } from './definitions';
+import type {GpayPlugin, IsReadyToPayResponse, PaymentData} from './definitions';
 
 export class GpayWeb extends WebPlugin implements GpayPlugin {
-  async echo(options: { value: string }): Promise<{ value: string }> {
-    console.log('ECHO', options);
-    return options;
+  createClient(): Promise<void> {
+    throw new Error('Method not implemented');
+  }
+
+  isReadyToPay(): Promise<IsReadyToPayResponse> {
+    throw new Error('Method not implemented');
+  }
+
+  loadPaymentData(): Promise<PaymentData> {
+    throw new Error('Method not implemented');
   }
 }

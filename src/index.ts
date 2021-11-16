@@ -7,4 +7,4 @@ const Gpay = registerPlugin<GpayPlugin>('Gpay', {
 });
 
 export * from './definitions';
-export { Gpay };
+export default Gpay;
