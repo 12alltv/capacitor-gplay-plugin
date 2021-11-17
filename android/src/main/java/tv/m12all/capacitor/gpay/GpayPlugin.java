@@ -92,27 +92,23 @@ public class GpayPlugin extends Plugin {
   @Override
   protected void handleOnActivityResult(int requestCode, int resultCode, Intent data) {
     if (requestCode != LOAD_PAYMENT_DATA_REQUEST_CODE) return;
-    JSObject jsPaymentData;
-
-    try {
-      PaymentData paymentData = PaymentData.getFromIntent(data);
-      assert paymentData != null;
-      final String paymentInfo = paymentData.toJson();
-      JSONObject paymentInfoJSON = new JSONObject(paymentInfo);
-      jsPaymentData = JSObject.fromJSONObject(paymentInfoJSON);
-    } catch (final JSONException e) {
-      loadPaymentCall.reject(e.getLocalizedMessage(), e);
-      return;
-    }
 
     switch (resultCode) {
       case Activity.RESULT_OK:
-        loadPaymentCall.resolve(jsPaymentData);
+        try {
+          PaymentData paymentData = PaymentData.getFromIntent(data);
+          assert paymentData != null;
+          final String paymentInfo = paymentData.toJson();
+          JSONObject paymentInfoJSON = new JSONObject(paymentInfo);
+          JSObject jsPaymentData = JSObject.fromJSONObject(paymentInfoJSON);
+          loadPaymentCall.resolve(jsPaymentData);
+        } catch (final JSONException e) {
+          loadPaymentCall.reject(e.getLocalizedMessage(), e);
+        }
         break;
 
       case Activity.RESULT_CANCELED:
-        jsPaymentData.put("status", "canceled");
-        loadPaymentCall.reject(jsPaymentData.toString());
+        loadPaymentCall.reject("canceled");
         break;
 
       case AutoResolveHelper.RESULT_ERROR:
